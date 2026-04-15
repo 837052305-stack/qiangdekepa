@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>强的可怕 - AI工具分享平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+            color: white;
+            padding: 0 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid #e2e8f0;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .filter-bar select, .filter-bar input {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        .tool-card-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ChatGPT/OpenAI 风格 */
+        .tool-card-image.chatgpt {
+            background: linear-gradient(135deg, #10a37f 0%, #0d8c6d 100%);
+        }
+        .tool-card-image.chatgpt::before {
+            content: "ChatGPT";
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        /* Claude/Anthropic 风格 */
+        .tool-card-image.claude {
+            background: linear-gradient(135deg, #d97757 0%, #c45e3c 100%);
+        }
+        .tool-card-image.claude::before {
+            content: "Claude";
+            font-size: 2rem;
+        }
+
+        /* Midjourney 风格 - 彩虹艺术 */
+        .tool-card-image.midjourney {
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 25%, #3a86ff 50%, #06ffa5 75%, #ffbe0b 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 8s ease infinite;
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .tool-card-image.midjourney::before {
+            content: "Midjourney";
+            font-size: 1.8rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* GitHub Copilot 风格 */
+        .tool-card-image.copilot {
+            background: linear-gradient(135deg, #1f2328 0%, #2d333b 100%);
+        }
+        .tool-card-image.copilot::before {
+            content: "⚡ Copilot";
+            font-size: 1.8rem;
+            color: #a371f7;
+        }
+
+        /* DALL-E 风格 */
+        .tool-card-image.dalle {
+            background: linear-gradient(135deg, #5436da 0%, #7b61ff 100%);
+        }
+        .tool-card-image.dalle::before {
+            content: "DALL·E";
+            font-size: 2rem;
+        }
+
+        /* Stable Diffusion 风格 */
+        .tool-card-image.stable {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-bottom: 3px solid #4ade80;
+        }
+        .tool-card-image.stable::before {
+            content: "SD";
+            font-size: 3.5rem;
+            color: #4ade80;
+        }
+
+        /* Bard/Gemini 风格 */
+        .tool-card-image.gemini {
+            background: linear-gradient(135deg, #8e75b6 0%, #c58af9 50%, #fbbc04 100%);
+        }
+        .tool-card-image.gemini::before {
+            content: "✦ Gemini";
+            font-size: 2rem;
+        }
+
+        /* Bing/CoPilot 微软风格 */
+        .tool-card-image.bing {
+            background: linear-gradient(135deg, #0078d4 0%, #40e0d0 100%);
+        }
+        .tool-card-image.bing::before {
+            content: "Bing AI";
+            font-size: 2rem;
+        }
+
+        /* Runway 风格 */
+        .tool-card-image.runway {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+        }
+        .tool-card-image.runway::before {
+            content: "Runway";
+            font-size: 2rem;
+            background: linear-gradient(90deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Sora 风格 */
+        .tool-card-image.sora {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+        }
+        .tool-card-image.sora::before {
+            content: "Sora";
+            font-size: 2.5rem;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Pika 风格 */
+        .tool-card-image.pika {
+            background: linear-gradient(135deg, #ff006e 0%, #ff4d00 100%);
+        }
+        .tool-card-image.pika::before {
+            content: "⚡ Pika";
+            font-size: 2rem;
+        }
+
+        /* HeyGen 风格 */
+        .tool-card-image.heygen {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .tool-card-image.heygen::before {
+            content: "HeyGen";
+            font-size: 2rem;
+        }
+
+        /* 文心一言 风格 */
+        .tool-card-image.wenxin {
+            background: linear-gradient(135deg, #2932e1 0%, #4f5cff 100%);
+        }
+        .tool-card-image.wenxin::before {
+            content: "文心一言";
+            font-size: 1.8rem;
+        }
+
+        /* 通义千问 风格 */
+        .tool-card-image.tongyi {
+            background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
+        }
+        .tool-card-image.tongyi::before {
+            content: "通义千问";
+            font-size: 1.8rem;
+        }
+
+        /* Kimi 风格 */
+        .tool-card-image.kimi {
+            background: linear-gradient(135deg, #00d4aa 0%, #00a884 100%);
+        }
+        .tool-card-image.kimi::before {
+            content: "Kimi";
+            font-size: 2.5rem;
+        }
+
+        /* 智谱清言 风格 */
+        .tool-card-image.zhipu {
+            background: linear-gradient(135deg, #1a5cff 0%, #0051ff 100%);
+        }
+        .tool-card-image.zhipu::before {
+            content: "智谱";
+            font-size: 2.2rem;
+        }
+
+        /* Notion AI 风格 */
+        .tool-card-image.notion {
+            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
+        }
+        .tool-card-image.notion::before {
+            content: "✦ Notion";
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        /* Jasper 风格 */
+        .tool-card-image.jasper {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .tool-card-image.jasper::before {
+            content: "Jasper";
+            font-size: 2rem;
+        }
+
+        /* Copy.ai 风格 */
+        .tool-card-image.copyai {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        }
+        .tool-card-image.copyai::before {
+            content: "Copy.ai";
+            font-size: 1.8rem;
+        }
+
+        /* Perplexity 风格 */
+        .tool-card-image.perplexity {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #00d4aa;
+        }
+        .tool-card-image.perplexity::before {
+            content: "⟁ Perplexity";
+            font-size: 1.6rem;
+            color: #00d4aa;
+        }
+
+        /* Leonardo AI 风格 */
+        .tool-card-image.leonardo {
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+        }
+        .tool-card-image.leonardo::before {
+            content: "Leonardo";
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Adobe Firefly 风格 */
+        .tool-card-image.firefly {
+            background: linear-gradient(135deg, #ff0000 0%, #ff6b35 50%, #ffb800 100%);
+        }
+        .tool-card-image.firefly::before {
+            content: "Firefly";
+            font-size: 2rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Canva AI 风格 */
+        .tool-card-image.canva {
+            background: linear-gradient(135deg, #00c4cc 0%, #7d3cff 100%);
+        }
+        .tool-card-image.canva::before {
+            content: "Canva AI";
+            font-size: 2rem;
+        }
+
+        /* Cursor 风格 */
+        .tool-card-image.cursor {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+        }
+        .tool-card-image.cursor::before {
+            content: "◈ Cursor";
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        /* Tabnine 风格 */
+        .tool-card-image.tabnine {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+        }
+        .tool-card-image.tabnine::before {
+            content: "Tabnine";
+            font-size: 2rem;
+        }
+
+        /* Codeium 风格 */
+        .tool-card-image.codeium {
+            background: linear-gradient(135deg, #09b6a2 0%, #00d9a3 100%);
+        }
+        .tool-card-image.codeium::before {
+            content: "⚡ Codeium";
+            font-size: 1.8rem;
+        }
+
+        /* Replicate 风格 */
+        .tool-card-image.replicate {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #f43f5e;
+        }
+        .tool-card-image.replicate::before {
+            content: "◐ Replicate";
+            font-size: 1.6rem;
+            color: #f43f5e;
+        }
+
+        /* Hugging Face 风格 */
+        .tool-card-image.huggingface {
+            background: linear-gradient(135deg, #ffde59 0%, #ff914d 100%);
+        }
+        .tool-card-image.huggingface::before {
+            content: "🤗 Hugging";
+            font-size: 1.8rem;
+            color: #1a1a1a;
+        }
+
+        /* Descript 风格 */
+        .tool-card-image.descript {
+            background: linear-gradient(135deg, #00d4aa 0%, #00a884 100%);
+        }
+        .tool-card-image.descript::before {
+            content: "▶ Descript";
+            font-size: 1.8rem;
+        }
+
+        /* Otter.ai 风格 */
+        .tool-card-image.otter {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        }
+        .tool-card-image.otter::before {
+            content: "🎙 Otter";
+            font-size: 2rem;
+        }
+
+        /* Grammarly 风格 */
+        .tool-card-image.grammarly {
+            background: linear-gradient(135deg, #15c39a 0%, #0ea5e9 100%);
+        }
+        .tool-card-image.grammarly::before {
+            content: "G";
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        /* 默认分类风格 */
+        .tool-card-image.text-gen {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .tool-card-image.text-gen::before {
+            content: "AI";
+            font-size: 2.5rem;
+            opacity: 0.3;
+        }
+        .tool-card-image.image-gen {
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+        }
+        .tool-card-image.image-gen::before {
+            content: "🎨";
+            font-size: 3rem;
+        }
+        .tool-card-image.code-assist {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .tool-card-image.code-assist::before {
+            content: "</>";
+            font-size: 2rem;
+            font-family: monospace;
+        }
+        .tool-card-image.data-analysis {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        .tool-card-image.data-analysis::before {
+            content: "📊";
+            font-size: 3rem;
+        }
+        .tool-card-image.voice {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        .tool-card-image.voice::before {
+            content: "🎤";
+            font-size: 3rem;
+        }
+        .tool-card-image.video {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+        .tool-card-image.video::before {
+            content: "🎬";
+            font-size: 3rem;
+        }
+        .tool-card-image.default {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+        .tool-card-image.default::before {
+            content: "🚀";
+            font-size: 3rem;
+        }
+        .tool-card-content {
+            padding: 20px;
+        }
+        .tool-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .tool-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .tool-card-category {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+        .tool-card-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .tool-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+        .tag {
+            background: var(--bg-color);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+        }
+        .tool-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .tool-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .action-btn:hover {
+            background: var(--bg-color);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+        }
+        .chat-container.active {
+            display: flex;
+        }
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: var(--bg-color);
+        }
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .chat-message.own {
+            background: var(--primary-color);
+            color: white;
+            margin-left: 20%;
+        }
+        .chat-message.system {
+            text-align: center;
+            background: transparent;
+            box-shadow: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            outline: none;
+        }
+        .chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            z-index: 998;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        .detail-modal .modal-content {
+            max-width: 700px;
+        }
+        .detail-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            margin: -30px -30px 20px -30px;
+            border-radius: 16px 16px 0 0;
+        }
+        .comments-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .comment-item {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#" class="navbar-brand">🚀 强的可怕</a>
+            <div class="nav-links">
+                <a href="#" onclick="showPage('home')">首页</a>
+                <a href="#" onclick="openShareModal()">分享工具</a>
+                <a href="#" onclick="showPage('favorites')">我的收藏</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>🚀 强的可怕</h1>
+            <p>发现、分享、探讨最强大的 AI 工具</p>
+        </div>
+
+        <div class="filter-bar">
+            <select id="categoryFilter" onchange="filterTools()">
+                <option value="all">全部分类</option>
+                <option value="文本生成">文本生成</option>
+                <option value="图像生成">图像生成</option>
+                <option value="代码辅助">代码辅助</option>
+                <option value="数据分析">数据分析</option>
+                <option value="语音识别">语音识别</option>
+                <option value="视频生成">视频生成</option>
+                <option value="其他">其他</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="搜索工具..." onkeyup="filterTools()">
+            <button class="btn btn-primary" onclick="openShareModal()">+ 分享工具</button>
+        </div>
+
+        <div id="toolsContainer" class="tools-grid"></div>
+    </div>
+
+    <!-- 分享工具模态框 -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">分享 AI 工具 🚀</h2>
+            <form id="shareForm" onsubmit="submitTool(event)">
+                <div class="form-group">
+                    <label>工具名称 *</label>
+                    <input type="text" id="toolName" required placeholder="例如：ChatGPT">
+                </div>
+                <div class="form-group">
+                    <label>工具描述 *</label>
+                    <textarea id="toolDesc" required placeholder="介绍这个工具的功能和特点..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>工具链接 *</label>
+                    <input type="url" id="toolLink" required placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>分类 *</label>
+                    <select id="toolCategory" required>
+                        <option value="文本生成">文本生成</option>
+                        <option value="图像生成">图像生成</option>
+                        <option value="代码辅助">代码辅助</option>
+                        <option value="数据分析">数据分析</option>
+                        <option value="语音识别">语音识别</option>
+                        <option value="视频生成">视频生成</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>标签</label>
+                    <input type="text" id="toolTags" placeholder="用逗号分隔，如：AI, 免费, 中文">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeShareModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">发布</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 详情模态框 -->
+    <div id="detailModal" class="modal detail-modal">
+        <div class="modal-content" id="detailContent">
+            <!-- 动态内容 -->
+        </div>
+    </div>
+
+    <!-- 聊天按钮 -->
+    <button class="chat-toggle" onclick="toggleChat()">💬</button>
+
+    <!-- 聊天窗口 -->
+    <div id="chatContainer" class="chat-container">
+        <div class="chat-header">
+            <div>
+                <strong>💬 实时聊天室</strong>
+                <div style="font-size: 0.85rem; opacity: 0.9;">🟢 <span id="onlineCount">1</span> 人在线</div>
+            </div>
+            <button onclick="toggleChat()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
+        </div>
+        <div id="chatMessages" class="chat-messages"></div>
+        <form class="chat-input-area" onsubmit="sendMessage(event)">
+            <input type="text" id="chatInput" class="chat-input" placeholder="输入消息..." required>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">发送</button>
+        </form>
+    </div>
+
+    <script>
+        // 数据存储
+        let tools = JSON.parse(localStorage.getItem('qiangdekepa_tools')) || [];
+        let favorites = JSON.parse(localStorage.getItem('qiangdekepa_favorites')) || [];
+        let comments = JSON.parse(localStorage.getItem('qiangdekepa_comments')) || {};
+        let currentUser = { username: '访客' + Math.floor(Math.random() * 1000), avatar: '👤' };
+
+        // 更多示例工具数据
+        const sampleTools = [
+            {
+                id: Date.now(),
+                name: 'ChatGPT',
+                description: 'OpenAI 开发的强大对话 AI，可以回答问题、写作、编程、翻译等。',
+                link: 'https://chat.openai.com',
+                category: '文本生成',
+                tags: ['AI', '对话', '免费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 328
+            },
+            {
+                id: Date.now() + 1,
+                name: 'Claude',
+                description: 'Anthropic 开发的 AI 助手，擅长长文本处理和分析。',
+                link: 'https://claude.ai',
+                category: '文本生成',
+                tags: ['AI', '长文本', '免费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 186
+            },
+            {
+                id: Date.now() + 2,
+                name: 'Midjourney',
+                description: '通过文本描述生成高质量艺术图像的 AI 工具。',
+                link: 'https://www.midjourney.com',
+                category: '图像生成',
+                tags: ['AI绘画', '艺术', '付费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 256
+            },
+            {
+                id: Date.now() + 3,
+                name: 'DALL-E 3',
+                description: 'OpenAI 的图像生成工具，根据文字描述创建逼真图像。',
+                link: 'https://openai.com/dall-e-3',
+                category: '图像生成',
+                tags: ['AI绘画', 'OpenAI', '高清'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 145
+            },
+            {
+                id: Date.now() + 4,
+                name: 'GitHub Copilot',
+                description: 'AI 编程助手，能自动补全代码、生成函数、解释代码。',
+                link: 'https://github.com/features/copilot',
+                category: '代码辅助',
+                tags: ['编程', 'IDE插件', '付费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 195
+            },
+            {
+                id: Date.now() + 5,
+                name: 'Gemini',
+                description: 'Google 开发的多模态 AI，支持文本、图像、代码理解。',
+                link: 'https://gemini.google.com',
+                category: '文本生成',
+                tags: ['Google', '多模态', '免费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 167
+            },
+            {
+                id: Date.now() + 6,
+                name: 'Stable Diffusion',
+                description: '开源图像生成模型，可在本地运行，社区资源丰富。',
+                link: 'https://stability.ai',
+                category: '图像生成',
+                tags: ['开源', '本地运行', '免费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 134
+            },
+            {
+                id: Date.now() + 7,
+                name: 'Runway Gen-2',
+                description: 'AI 视频生成工具，用文本或图片生成高质量视频。',
+                link: 'https://runwayml.com',
+                category: '视频生成',
+                tags: ['视频', 'AI生成', '创意'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 98
+            },
+            {
+                id: Date.now() + 8,
+                name: 'Kimi',
+                description: '月之暗面开发的中文 AI 助手，支持超长文本处理。',
+                link: 'https://kimi.moonshot.cn',
+                category: '文本生成',
+                tags: ['国产', '长文本', '中文'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 223
+            },
+            {
+                id: Date.now() + 9,
+                name: 'Perplexity',
+                description: 'AI 搜索引擎，提供带引用来源的答案。',
+                link: 'https://www.perplexity.ai',
+                category: '文本生成',
+                tags: ['搜索', '引用', '研究'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 112
+            },
+            {
+                id: Date.now() + 10,
+                name: 'Notion AI',
+                description: 'Notion 内置的 AI 助手，辅助写作、总结和头脑风暴。',
+                link: 'https://www.notion.so/product/ai',
+                category: '文本生成',
+                tags: ['笔记', '写作', '生产力'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 156
+            },
+            {
+                id: Date.now() + 11,
+                name: 'Leonardo AI',
+                description: '游戏资产和概念艺术生成工具，提供免费额度。',
+                link: 'https://leonardo.ai',
+                category: '图像生成',
+                tags: ['游戏', '概念艺术', '免费额度'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 87
+            },
+            {
+                id: Date.now() + 12,
+                name: 'Pika',
+                description: 'AI 视频编辑工具，用文字编辑视频内容。',
+                link: 'https://pika.art',
+                category: '视频生成',
+                tags: ['视频编辑', 'AI', '创意'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 76
+            },
+            {
+                id: Date.now() + 13,
+                name: 'Sora',
+                description: 'OpenAI 的文本生成视频模型，可生成高质量短视频。',
+                link: 'https://openai.com/sora',
+                category: '视频生成',
+                tags: ['视频', 'OpenAI', '生成式'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 234
+            },
+            {
+                id: Date.now() + 14,
+                name: '文心一言',
+                description: '百度开发的中文大语言模型，支持多轮对话。',
+                link: 'https://yiyan.baidu.com',
+                category: '文本生成',
+                tags: ['百度', '国产', '中文'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 178
+            },
+            {
+                id: Date.now() + 15,
+                name: '通义千问',
+                description: '阿里巴巴开发的 AI 大模型，支持多种应用场景。',
+                link: 'https://tongyi.aliyun.com',
+                category: '文本生成',
+                tags: ['阿里', '国产', '多模态'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 165
+            },
+            {
+                id: Date.now() + 16,
+                name: 'HeyGen',
+                description: 'AI 数字人视频生成工具，支持多种语言和口型同步。',
+                link: 'https://www.heygen.com',
+                category: '视频生成',
+                tags: ['数字人', '视频', '多语言'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 89
+            },
+            {
+                id: Date.now() + 17,
+                name: '智谱清言',
+                description: '智谱 AI 开发的中文助手，基于 ChatGLM 大模型。',
+                link: 'https://chatglm.cn',
+                category: '文本生成',
+                tags: ['智谱', '国产', 'ChatGLM'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 143
+            },
+            {
+                id: Date.now() + 18,
+                name: 'Adobe Firefly',
+                description: 'Adobe 的创意生成 AI，集成在 Photoshop 等软件中。',
+                link: 'https://www.adobe.com/products/firefly.html',
+                category: '图像生成',
+                tags: ['Adobe', '创意', '设计'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 121
+            },
+            {
+                id: Date.now() + 19,
+                name: 'Canva AI',
+                description: 'Canva 内置的 AI 设计助手，快速生成海报、PPT等。',
+                link: 'https://www.canva.com/ai-design/',
+                category: '图像生成',
+                tags: ['设计', '模板', '易用'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 156
+            },
+            {
+                id: Date.now() + 20,
+                name: 'Copy.ai',
+                description: '营销文案 AI 生成工具，适合广告、社媒内容创作。',
+                link: 'https://www.copy.ai',
+                category: '文本生成',
+                tags: ['营销', '文案', '广告'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 67
+            },
+            {
+                id: Date.now() + 21,
+                name: 'Jasper',
+                description: '企业级 AI 写作助手，支持长文、营销、SEO内容。',
+                link: 'https://www.jasper.ai',
+                category: '文本生成',
+                tags: ['企业', 'SEO', '长文'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 54
+            },
+            {
+                id: Date.now() + 22,
+                name: 'Bing AI',
+                description: '微软必应集成的 AI 搜索助手，基于 GPT-4。',
+                link: 'https://www.bing.com/chat',
+                category: '文本生成',
+                tags: ['微软', '搜索', '免费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 198
+            },
+            {
+                id: Date.now() + 23,
+                name: 'Cursor',
+                description: 'AI 原生代码编辑器，基于 GPT-4，支持代码生成和重构。',
+                link: 'https://cursor.sh',
+                category: '代码辅助',
+                tags: ['编辑器', 'AI编程', '免费'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 167
+            },
+            {
+                id: Date.now() + 24,
+                name: 'Tabnine',
+                description: '专业的 AI 代码补全工具，支持多种编程语言。',
+                link: 'https://www.tabnine.com',
+                category: '代码辅助',
+                tags: ['代码补全', 'IDE', '多语言'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 89
+            },
+            {
+                id: Date.now() + 25,
+                name: 'Codeium',
+                description: '免费的 AI 编程助手，类似 Copilot，完全免费。',
+                link: 'https://codeium.com',
+                category: '代码辅助',
+                tags: ['免费', '代码补全', '开源'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 134
+            },
+            {
+                id: Date.now() + 26,
+                name: 'Replicate',
+                description: 'AI 模型运行平台，可运行各种开源图像、视频模型。',
+                link: 'https://replicate.com',
+                category: '图像生成',
+                tags: ['平台', '开源', 'API'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 76
+            },
+            {
+                id: Date.now() + 27,
+                name: 'Hugging Face',
+                description: '最大的 AI 模型社区，提供各种开源模型和工具。',
+                link: 'https://huggingface.co',
+                category: '其他',
+                tags: ['社区', '开源', '模型'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 245
+            },
+            {
+                id: Date.now() + 28,
+                name: 'Descript',
+                description: 'AI 音视频编辑工具，用文字编辑音频和视频。',
+                link: 'https://www.descript.com',
+                category: '语音识别',
+                tags: ['音视频', '编辑', '转录'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 98
+            },
+            {
+                id: Date.now() + 29,
+                name: 'Otter.ai',
+                description: 'AI 会议记录和转录工具，自动生成会议纪要。',
+                link: 'https://otter.ai',
+                category: '语音识别',
+                tags: ['会议', '转录', '效率'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 112
+            },
+            {
+                id: Date.now() + 30,
+                name: 'Grammarly',
+                description: 'AI 写作助手，检查语法、风格和语气。',
+                link: 'https://www.grammarly.com',
+                category: '文本生成',
+                tags: ['写作', '语法', '校对'],
+                author: '强的可怕团队',
+                likes: [],
+                views: 189
+            }
+        ];
+
+        // 初始化示例数据 - 强制更新
+        if (tools.length === 0 || tools.length < 10) {
+            tools = sampleTools;
+            saveTools();
+        }
+
+        function saveTools() {
+            localStorage.setItem('qiangdekepa_tools', JSON.stringify(tools));
+        }
+
+        function saveFavorites() {
+            localStorage.setItem('qiangdekepa_favorites', JSON.stringify(favorites));
+        }
+
+        function saveComments() {
+            localStorage.setItem('qiangdekepa_comments', JSON.stringify(comments));
+        }
+
+        // 根据工具名称获取对应的样式类
+        function getToolStyleClass(name, category) {
+            const lowerName = name.toLowerCase().replace(/[\s\.]/g, '');
+
+            // 匹配特定工具
+            if (lowerName.includes('chatgpt') || lowerName.includes('gpt') || (lowerName.includes('openai') && !lowerName.includes('dalle') && !lowerName.includes('sora'))) return 'chatgpt';
+            if (lowerName.includes('claude') || lowerName.includes('anthropic')) return 'claude';
+            if (lowerName.includes('midjourney') || lowerName.includes('mj')) return 'midjourney';
+            if (lowerName.includes('github') && lowerName.includes('copilot')) return 'copilot';
+            if (lowerName.includes('dalle') || lowerName.includes('dall-e') || lowerName.includes('dalle3')) return 'dalle';
+            if (lowerName.includes('stable') || lowerName.includes('stablediffusion') || lowerName.includes('sd')) return 'stable';
+            if (lowerName.includes('gemini') || lowerName.includes('bard') || lowerName.includes('google')) return 'gemini';
+            if (lowerName.includes('bing') || (lowerName.includes('copilot') && !lowerName.includes('github'))) return 'bing';
+            if (lowerName.includes('runway')) return 'runway';
+            if (lowerName.includes('sora') || lowerName.includes('openai') && lowerName.includes('视频')) return 'sora';
+            if (lowerName.includes('pika')) return 'pika';
+            if (lowerName.includes('heygen')) return 'heygen';
+            if (lowerName.includes('wenxin') || lowerName.includes('文心') || lowerName.includes('百度')) return 'wenxin';
+            if (lowerName.includes('tongyi') || lowerName.includes('通义') || lowerName.includes('千问') || lowerName.includes('阿里')) return 'tongyi';
+            if (lowerName.includes('kimi') || lowerName.includes('月之暗面') || lowerName.includes('moonshot')) return 'kimi';
+            if (lowerName.includes('zhipu') || lowerName.includes('智谱') || lowerName.includes('清言') || lowerName.includes('chatglm')) return 'zhipu';
+            if (lowerName.includes('notion')) return 'notion';
+            if (lowerName.includes('jasper')) return 'jasper';
+            if (lowerName.includes('copyai') || lowerName.includes('copy')) return 'copyai';
+            if (lowerName.includes('perplexity')) return 'perplexity';
+            if (lowerName.includes('leonardo')) return 'leonardo';
+            if (lowerName.includes('firefly') || lowerName.includes('萤火虫') || lowerName.includes('adobe')) return 'firefly';
+            if (lowerName.includes('canva')) return 'canva';
+            if (lowerName.includes('cursor')) return 'cursor';
+            if (lowerName.includes('tabnine')) return 'tabnine';
+            if (lowerName.includes('codeium')) return 'codeium';
+            if (lowerName.includes('replicate')) return 'replicate';
+            if (lowerName.includes('huggingface') || lowerName.includes('hugging') || lowerName.includes('face')) return 'huggingface';
+            if (lowerName.includes('descript')) return 'descript';
+            if (lowerName.includes('otter')) return 'otter';
+            if (lowerName.includes('grammarly')) return 'grammarly';
+
+            // 按分类匹配
+            if (category === '文本生成') return 'text-gen';
+            if (category === '图像生成') return 'image-gen';
+            if (category === '代码辅助') return 'code-assist';
+            if (category === '数据分析') return 'data-analysis';
+            if (category === '语音识别') return 'voice';
+            if (category === '视频生成') return 'video';
+
+            return 'default';
+        }
+
+        // 渲染工具列表
+        function renderTools(toolsToRender = tools) {
+            const container = document.getElementById('toolsContainer');
+
+            if (toolsToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <h3>暂无工具</h3>
+                        <p>快来分享第一个 AI 工具吧！</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = toolsToRender.map(tool => {
+                const styleClass = getToolStyleClass(tool.name, tool.category);
+                return `
+                <div class="tool-card">
+                    <div class="tool-card-image ${styleClass}"></div>
+                    <div class="tool-card-content">
+                        <div class="tool-card-header">
+                            <span class="tool-card-title">${escapeHtml(tool.name)}</span>
+                            <span class="tool-card-category">${tool.category}</span>
+                        </div>
+                        <p class="tool-card-description">${escapeHtml(tool.description)}</p>
+                        <div class="tool-card-tags">
+                            ${tool.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+                        </div>
+                        <div class="tool-card-footer">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">
+                                👤 ${escapeHtml(tool.author)}
+                            </span>
+                            <div class="tool-card-actions">
+                                <button class="action-btn" onclick="likeTool(${tool.id})" title="点赞">
+                                    ${tool.likes.includes(currentUser.username) ? '❤️' : '🤍'} ${tool.likes.length}
+                                </button>
+                                <button class="action-btn" onclick="toggleFavorite(${tool.id})" title="收藏">
+                                    ${favorites.includes(tool.id) ? '⭐' : '☆'}
+                                </button>
+                                <button class="action-btn" onclick="openDetail(${tool.id})" title="查看详情">
+                                    💬 ${(comments[tool.id] || []).length}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 筛选工具
+        function filterTools() {
+            const category = document.getElementById('categoryFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = tools;
+
+            if (category !== 'all') {
+                filtered = filtered.filter(t => t.category === category);
+            }
+
+            if (search) {
+                filtered = filtered.filter(t =>
+                    t.name.toLowerCase().includes(search) ||
+                    t.description.toLowerCase().includes(search) ||
+                    t.tags.some(tag => tag.toLowerCase().includes(search))
+                );
+            }
+
+            renderTools(filtered);
+        }
+
+        // 打开分享模态框
+        function openShareModal() {
+            document.getElementById('shareModal').classList.add('active');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.remove('active');
+            document.getElementById('shareForm').reset();
+        }
+
+        // 提交工具
+        function submitTool(e) {
+            e.preventDefault();
+
+            const tool = {
+                id: Date.now(),
+                name: document.getElementById('toolName').value,
+                description: document.getElementById('toolDesc').value,
+                link: document.getElementById('toolLink').value,
+                category: document.getElementById('toolCategory').value,
+                tags: document.getElementById('toolTags').value.split(',').map(t => t.trim()).filter(t => t),
+                author: currentUser.username,
+                likes: [],
+                views: 0
+            };
+
+            tools.unshift(tool);
+            saveTools();
+            renderTools();
+            closeShareModal();
+
+            // 广播到聊天
+            addChatMessage('system', `${currentUser.username} 分享了一个新工具：${tool.name}`);
+        }
+
+        // 点赞
+        function likeTool(id) {
+            const tool = tools.find(t => t.id === id);
+            if (!tool) return;
+
+            const index = tool.likes.indexOf(currentUser.username);
+            if (index > -1) {
+                tool.likes.splice(index, 1);
+            } else {
+                tool.likes.push(currentUser.username);
+            }
+
+            saveTools();
+            filterTools();
+        }
+
+        // 收藏
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(id);
+            }
+            saveFavorites();
+            filterTools();
+        }
+
+        // 打开详情
+        function openDetail(id) {
+            const tool = tools.find(t => t.id === id);
+            if (!tool) return;
+
+            tool.views++;
+            saveTools();
+
+            const toolComments = comments[id] || [];
+
+            document.getElementById('detailContent').innerHTML = `
+                <div class="detail-header">
+                    <h1>${escapeHtml(tool.name)}</h1>
+                    <div style="margin-top: 10px; opacity: 0.9;">
+                        <span class="tool-card-category">${tool.category}</span>
+                        <span style="margin-left: 15px;">👁 ${tool.views} 浏览</span>
+                        <span style="margin-left: 15px;">❤️ ${tool.likes.length} 喜欢</span>
+                    </div>
+                </div>
+                <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px;">${escapeHtml(tool.description)}</p>
+                <div class="tool-card-tags" style="margin-bottom: 20px;">
+                    ${tool.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <a href="${tool.link}" target="_blank" class="btn btn-primary">🚀 访问工具</a>
+                    <button class="btn btn-secondary" onclick="likeTool(${tool.id}); openDetail(${tool.id})">
+                        ${tool.likes.includes(currentUser.username) ? '❤️ 已喜欢' : '🤍 喜欢'}
+                    </button>
+                    <button class="btn btn-secondary" onclick="toggleFavorite(${tool.id}); openDetail(${tool.id})">
+                        ${favorites.includes(tool.id) ? '⭐ 已收藏' : '☆ 收藏'}
+                    </button>
+                </div>
+                <div style="padding: 15px; background: var(--bg-color); border-radius: 12px; margin-bottom: 20px;">
+                    <strong>分享者：</strong>${escapeHtml(tool.author)}
+                </div>
+                <div class="comments-section">
+                    <h3>💬 讨论区 (${toolComments.length})</h3>
+                    <form onsubmit="addComment(event, ${id})" style="margin: 15px 0;">
+                        <input type="text" id="commentInput" placeholder="分享你的看法..." style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;" required>
+                    </form>
+                    <div id="commentsList">
+                        ${toolComments.length > 0 ? toolComments.map(c => `
+                            <div class="comment-item">
+                                <strong>${escapeHtml(c.author)}</strong>
+                                <span style="color: var(--text-secondary); font-size: 0.85rem; margin-left: 10px;">${new Date(c.time).toLocaleString()}</span>
+                                <p style="margin-top: 5px;">${escapeHtml(c.content)}</p>
+                            </div>
+                        `).reverse().join('') : '<p style="color: var(--text-secondary);">暂无评论，快来发表第一条评论吧！</p>'}
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="closeDetailModal()">关闭</button>
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        function addComment(e, toolId) {
+            e.preventDefault();
+            const input = document.getElementById('commentInput');
+            const content = input.value.trim();
+            if (!content) return;
+
+            if (!comments[toolId]) comments[toolId] = [];
+            comments[toolId].push({
+                author: currentUser.username,
+                content: content,
+                time: new Date().toISOString()
+            });
+            saveComments();
+            openDetail(toolId);
+        }
+
+        // 聊天功能
+        let chatMessages = JSON.parse(localStorage.getItem('qiangdekepa_chat')) || [];
+
+        function toggleChat() {
+            document.getElementById('chatContainer').classList.toggle('active');
+        }
+
+        function renderChat() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = chatMessages.map(msg => `
+                <div class="chat-message ${msg.type} ${msg.author === currentUser.username ? 'own' : ''}">
+                    ${msg.type === 'user' ? `<strong>${escapeHtml(msg.author)}</strong><br>` : ''}
+                    ${escapeHtml(msg.content)}
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addChatMessage(type, content, author = null) {
+            chatMessages.push({
+                type,
+                content,
+                author: author || currentUser.username,
+                time: new Date().toISOString()
+            });
+
+            // 只保留最近 50 条
+            if (chatMessages.length > 50) chatMessages.shift();
+
+            localStorage.setItem('qiangdekepa_chat', JSON.stringify(chatMessages));
+            renderChat();
+
+            // 模拟其他用户
+            updateOnlineCount();
+        }
+
+        function sendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const content = input.value.trim();
+            if (!content) return;
+
+            addChatMessage('user', content);
+            input.value = '';
+        }
+
+        function updateOnlineCount() {
+            // 模拟在线人数变化
+            const count = Math.floor(Math.random() * 5) + 1;
+            document.getElementById('onlineCount').textContent = count;
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        }
+
+        // 显示收藏页面
+        function showPage(page) {
+            if (page === 'favorites') {
+                const favoriteTools = tools.filter(t => favorites.includes(t.id));
+                document.getElementById('toolsContainer').innerHTML = `
+                    <div style="grid-column: 1/-1;">
+                        <h2 style="margin-bottom: 20px;">⭐ 我的收藏</h2>
+                    </div>
+                `;
+                if (favoriteTools.length === 0) {
+                    document.getElementById('toolsContainer').innerHTML += `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <h3>暂无收藏</h3>
+                            <p>浏览工具时点击 ⭐ 收藏，将喜欢的工具添加到这里</p>
+                        </div>
+                    `;
+                } else {
+                    renderTools(favoriteTools);
+                }
+            } else {
+                filterTools();
+            }
+        }
+
+        // 初始化
+        renderTools();
+        renderChat();
+        updateOnlineCount();
+
+        // 模拟收到消息
+        setInterval(() => {
+            if (Math.random() > 0.95 && chatMessages.length > 0) {
+                const greetings = ['大家好！', '有人用过 Claude 吗？', '推荐一个图像生成的工具', '这个网站太棒了！'];
+                const names = ['小明', '小红', '张三', '李四', '王五'];
+                const randomMsg = greetings[Math.floor(Math.random() * greetings.length)];
+                const randomName = names[Math.floor(Math.random() * names.length)];
+                addChatMessage('user', randomMsg, randomName);
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
