@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ToolCard from '../components/ToolCard';
 import api from '../services/api';
@@ -14,6 +14,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUserProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchUserProfile = async () => {
