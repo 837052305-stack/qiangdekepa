@@ -24,10 +24,12 @@ const Home = () => {
   useEffect(() => {
     fetchTools();
   }, [category, sortBy]);
-
-  const fetchTools = async () => {
-    try {
-      setLoading(true);
+                                                                                                             
+    useEffect(() => {                                                                                                   
+      fetchTools();                                                                                                     
+      // eslint-disable-next-line react-hooks/exhaustive-deps                                                           
+    }, [category, sortBy]);                                                         
+    }, [category, sortBy]);   
       const params = { category, sort: sortBy };
       if (searchQuery) {
         params.search = searchQuery;
