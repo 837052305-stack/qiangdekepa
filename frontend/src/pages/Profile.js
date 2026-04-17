@@ -12,9 +12,10 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  useEffect(() => {
-    fetchUserProfile();
-  }, [id]);
+  useEffect(() => {                                                         
+      fetchUserProfile();                                                     
+      // eslint-disable-next-line react-hooks/exhaustive-deps                 
+    }, [id]); 
 
   const fetchUserProfile = async () => {
     try {
