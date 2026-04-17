@@ -25,6 +25,8 @@ useEffect(() => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category, sortBy]);                                                                                                                                                                                                                  
     const fetchTools = async () => { 
+      try {                                                                   
+        setLoading(true); 
       const params = { category, sort: sortBy };
       if (searchQuery) {
         params.search = searchQuery;
