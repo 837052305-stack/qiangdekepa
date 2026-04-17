@@ -15,9 +15,10 @@ const ToolDetail = () => {
   const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
-    fetchToolDetail();
-    fetchComments();
-  }, [id]);
+      fetchToolDetail();                                                                                                
+      fetchComments();                                                                                                  
+      // eslint-disable-next-line react-hooks/exhaustive-deps                                                           
+    }, [id]);  
 
   const fetchToolDetail = async () => {
     try {
