@@ -20,16 +20,11 @@ const Home = () => {
     { value: '视频生成', label: '视频生成' },
     { value: '其他', label: '其他' }
   ];
-
-  useEffect(() => {
-    fetchTools();
-  }, [category, sortBy]);
-                                                                                                             
-    useEffect(() => {                                                                                                   
+useEffect(() => {
       fetchTools();                                                                                                     
-      // eslint-disable-next-line react-hooks/exhaustive-deps                                                           
-    }, [category, sortBy]);                                                         
-    }, [category, sortBy]);   
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [category, sortBy]);                                                                                                                                                                                                                  
+    const fetchTools = async () => { 
       const params = { category, sort: sortBy };
       if (searchQuery) {
         params.search = searchQuery;
