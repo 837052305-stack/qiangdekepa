@@ -43,22 +43,6 @@ const Home = () => {
   }, [category, sortBy]);
 
   const handleSearch = (e) => {
-    try {
-      setLoading(true);
-      const params = { category, sort: sortBy };
-      if (searchQuery) {
-        params.search = searchQuery;
-      }
-      const response = await api.get('/api/tools', { params });
-      setTools(response.data.tools);
-    } catch (error) {
-      console.error('获取工具列表失败:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearch = (e) => {
     e.preventDefault();
     fetchTools();
   };
