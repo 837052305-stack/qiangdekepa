@@ -260,8 +260,8 @@ body {
 /* 工具卡片 */
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
   margin-top: 24px;
 }
 

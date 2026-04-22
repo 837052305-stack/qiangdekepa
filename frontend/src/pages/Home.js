@@ -27,7 +27,7 @@ const Home = () => {
   const fetchTools = async (page = 1) => {
     try {
       setLoading(true);
-      const params = { category, sort: sortBy, limit: 10, page };
+      const params = { category, sort: sortBy, limit: 15, page };
       if (searchQuery) {
         params.search = searchQuery;
       }
