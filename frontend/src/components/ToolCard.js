@@ -2,19 +2,28 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const ToolCard = ({ tool }) => {
+  // 使用 microlink 自动生成网站截图
+  const screenshotUrl = tool.image || `https://api.microlink.io/?url=${encodeURIComponent(tool.link)}&screenshot=true&embed=screenshot.url&meta=false`;
+
   return (
     <div className="tool-card">
-      <img
-        src={tool.image || 'https://via.placeholder.com/400x200?text=AI+Tool'}
-        alt={tool.name}
-        className="tool-card-image"
-      />
+      <div className="tool-card-image-wrapper">
+        <img
+          src={screenshotUrl}
+          alt={tool.name}
+          className="tool-card-image"
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/400x200?text=AI+Tool';
+          }}
+        />
+        <div className="tool-card-overlay"></div>
+        <span className="tool-card-category-badge">{tool.category}</span>
+      </div>
       <div className="tool-card-content">
         <div className="tool-card-header">
           <Link to={`/tool/${tool._id}`} className="tool-card-title">
             {tool.name}
           </Link>
-          <span className="tool-card-category">{tool.category}</span>
         </div>
 
         <p className="tool-card-description">{tool.description}</p>
@@ -39,8 +48,8 @@ const ToolCard = ({ tool }) => {
             </Link>
           </div>
           <div className="tool-card-stats">
-            <span className="stat-item">❤️ {tool.likesCount}</span>
-            <span className="stat-item">💬 {tool.commentsCount}</span>
+            <span className="stat-item">❤️ {tool.likesCount || 0}</span>
+            <span className="stat-item">💬 {tool.commentsCount || 0}</span>
           </div>
         </div>
       </div>
