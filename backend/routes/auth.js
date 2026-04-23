@@ -157,14 +157,68 @@ router.post('/forgot-password', async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1小时有效期
     await user.save();
 
-    // 创建邮件发送器（使用环境变量配置）
-    const transporter = nodemailer.createTransporter({
-      service: process.env.EMAIL_SERVICE || 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
+    // 根据邮箱类型自动配置 SMTP
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+    const emailService = process.env.EMAIL_SERVICE || 'gmail';
+
+    let transporterConfig;
+
+    // 根据邮箱后缀自动判断服务商
+    if (emailUser.includes('@qq.com')) {
+      // QQ邮箱配置
+      transporterConfig = {
+        host: 'smtp.qq.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: emailUser,
+          pass: emailPass  // QQ邮箱需要使用授权码
+        }
+      };
+    } else if (emailUser.includes('@163.com') || emailUser.includes('@126.com') || emailUser.includes('@yeah.net')) {
+      // 网易邮箱配置 (163/126/yeah.net)
+      transporterConfig = {
+        host: 'smtp.163.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: emailUser,
+          pass: emailPass  // 163邮箱需要使用授权码
+        }
+      };
+    } else if (emailUser.includes('@gmail.com')) {
+      // Gmail配置
+      transporterConfig = {
+        service: 'gmail',
+        auth: {
+          user: emailUser,
+          pass: emailPass  // Gmail需要使用应用专用密码
+        }
+      };
+    } else if (emailService.toLowerCase() === 'sendgrid') {
+      // SendGrid配置
+      transporterConfig = {
+        host: 'smtp.sendgrid.net',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'apikey',
+          pass: emailPass
+        }
+      };
+    } else {
+      // 通用SMTP配置（Outlook/企业邮箱等）
+      transporterConfig = {
+        service: emailService,
+        auth: {
+          user: emailUser,
+          pass: emailPass
+        }
+      };
+    }
+
+    const transporter = nodemailer.createTransporter(transporterConfig);
 
     // 重置链接
     const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${resetToken}`;
