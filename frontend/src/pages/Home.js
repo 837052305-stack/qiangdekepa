@@ -64,21 +64,23 @@ const Home = () => {
     <div>
       {/* Hero区域 */}
       <div className="hero">
-        <h1 className="hero-title">🚀 强的可怕</h1>
-        <p className="hero-subtitle">发现、分享、探讨最强大的 AI 工具</p>
+        <div className="hero-content">
+          <h1 className="hero-title">🚀 强的可怕</h1>
+          <p className="hero-subtitle">发现、分享、探讨最强大的 AI 工具</p>
 
-        <form onSubmit={handleSearch} className="search-bar">
-          <input
-            type="text"
-            placeholder="搜索 AI 工具..."
-            className="search-input"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button type="submit" className="btn btn-primary">
-            🔍 搜索
-          </button>
-        </form>
+          <form onSubmit={handleSearch} className="search-bar">
+            <input
+              type="text"
+              placeholder="搜索 AI 工具..."
+              className="search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="submit" className="btn btn-primary">
+              🔍 搜索
+            </button>
+          </form>
+        </div>
       </div>
 
       {/* 筛选栏 */}
