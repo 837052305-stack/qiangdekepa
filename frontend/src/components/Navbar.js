@@ -24,7 +24,7 @@ const Navbar = () => {
           {user && (
             <>
               <Link to="/share" className="nav-link">分享工具</Link>
-              <Link to="/chat" className="nav-link">聊天室</Link>
+              <Link to="/chat-rooms" className="nav-link">聊天室</Link>
               <Link to="/favorites" className="nav-link">我的收藏</Link>
             </>
           )}

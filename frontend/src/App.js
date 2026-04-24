@@ -11,6 +11,9 @@ import ToolDetail from './pages/ToolDetail';
 import ShareTool from './pages/ShareTool';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
+import ChatRooms from './pages/ChatRooms';
+import CreateChatRoom from './pages/CreateChatRoom';
+import ChatRoom from './pages/ChatRoom';
 import Favorites from './pages/Favorites';
 import './styles.css';
 
@@ -31,6 +34,9 @@ function App() {
               <Route path="/share" element={<ShareTool />} />
               <Route path="/profile/:id" element={<Profile />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/chat-rooms" element={<ChatRooms />} />
+              <Route path="/chat-rooms/create" element={<CreateChatRoom />} />
+              <Route path="/chat-room/:id" element={<ChatRoom />} />
               <Route path="/favorites" element={<Favorites />} />
             </Routes>
           </main>
