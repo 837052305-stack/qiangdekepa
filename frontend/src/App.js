@@ -10,6 +10,8 @@ import ShareTool from './pages/ShareTool';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import Favorites from './pages/Favorites';
+import Featured from './pages/Featured';
+import HighFrequency from './pages/HighFrequency';
 import './styles.css';
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/hot" element={<HighFrequency />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/tool/:id" element={<ToolDetail />} />
@@ -28,6 +31,7 @@ function App() {
               <Route path="/profile/:id" element={<Profile />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/favorites" element={<Favorites />} />
+              <Route path="/featured" element={<Featured />} />
             </Routes>
           </main>
         </div>

@@ -53,6 +53,58 @@ const Home = () => {
         <h1 className="hero-title">🚀 强的可怕</h1>
         <p className="hero-subtitle">发现、分享、探讨最强大的 AI 工具</p>
 
+        {/* 高频使用入口 - 放在最上面 */}
+        <Link to="/hot" style={{ textDecoration: 'none' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)',
+            borderRadius: '16px',
+            padding: '24px 32px',
+            marginBottom: '16px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '20px',
+            color: 'white',
+            boxShadow: '0 8px 30px rgba(255, 107, 107, 0.4)',
+            transition: 'transform 0.3s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <span style={{ fontSize: '48px' }}>🔥</span>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '4px' }}>高频使用</div>
+              <div style={{ fontSize: '15px', opacity: 0.95 }}>ChatGPT · Claude · Kimi · 文心一言 · 通义千问 · 豆包</div>
+            </div>
+            <span style={{ fontSize: '28px' }}>→</span>
+          </div>
+        </Link>
+
+        {/* 最佳推荐入口 */}
+        <Link to="/featured" style={{ textDecoration: 'none' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: '16px',
+            padding: '20px 32px',
+            marginBottom: '24px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '16px',
+            color: 'white',
+            boxShadow: '0 8px 30px rgba(102, 126, 234, 0.3)',
+            transition: 'transform 0.3s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <span style={{ fontSize: '40px' }}>⭐</span>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: '20px', fontWeight: 'bold' }}>最佳推荐</div>
+              <div style={{ fontSize: '14px', opacity: 0.9 }}>Gemini · Midjourney · 即梦AI</div>
+            </div>
+            <span style={{ fontSize: '24px', marginLeft: '8px' }}>→</span>
+          </div>
+        </Link>
+
         <form onSubmit={handleSearch} className="search-bar">
           <input
             type="text"

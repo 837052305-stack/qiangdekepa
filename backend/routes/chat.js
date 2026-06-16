@@ -6,8 +6,8 @@ const auth = require('../middleware/auth');
 const chatHistory = [];
 const MAX_HISTORY = 100;
 
-// 获取聊天历史
-router.get('/history', auth, (req, res) => {
+// 获取聊天历史（无需认证）
+router.get('/history', (req, res) => {
   try {
     res.json(chatHistory.slice(-50)); // 返回最近50条消息
   } catch (error) {

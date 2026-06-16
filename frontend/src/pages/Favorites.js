@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ToolCard from '../components/ToolCard';
 import api from '../services/api';
 
 const Favorites = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
     fetchFavorites();
-  }, [user, navigate]);
+  }, []);
 
   const fetchFavorites = async () => {
     try {
@@ -28,8 +21,6 @@ const Favorites = () => {
       setLoading(false);
     }
   };
-
-  if (!user) return null;
 
   return (
     <div>

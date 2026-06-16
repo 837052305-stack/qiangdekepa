@@ -20,16 +20,22 @@ const Navbar = () => {
         </Link>
 
         <div className="navbar-links">
+          <Link to="/hot" className="nav-link" style={{
+            background: 'linear-gradient(135deg, #ff6b6b, #feca57)',
+            color: 'white',
+            padding: '6px 14px',
+            borderRadius: '20px',
+            fontWeight: 700
+          }}>
+            🔥 高频使用
+          </Link>
           <Link to="/" className="nav-link">首页</Link>
-          {user && (
-            <>
-              <Link to="/share" className="nav-link">分享工具</Link>
-              <Link to="/chat" className="nav-link">聊天室</Link>
-              <Link to="/favorites" className="nav-link">我的收藏</Link>
-            </>
-          )}
+          <Link to="/featured" className="nav-link" style={{ color: '#9b59b6', fontWeight: 600 }}>⭐ 最佳推荐</Link>
+          <Link to="/share" className="nav-link">分享工具</Link>
+          <Link to="/chat" className="nav-link">聊天室</Link>
+          <Link to="/favorites" className="nav-link">我的收藏</Link>
 
-          {user ? (
+          {user && !user.isGuest ? (
             <div className="user-menu">
               <Link to={`/profile/${user.id}`}>
                 <img

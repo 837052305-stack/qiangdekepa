@@ -3,16 +3,22 @@ import api from '../services/api';
 
 const AuthContext = createContext(null);
 
+// 默认游客用户 - 无需登录即可使用所有功能
+const GUEST_USER = {
+  id: 'guest',
+  username: '游客',
+  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=guest',
+  isGuest: true
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(GUEST_USER);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       fetchUser();
-    } else {
-      setLoading(false);
     }
   }, []);
 

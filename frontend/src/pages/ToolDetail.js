@@ -43,10 +43,6 @@ const ToolDetail = () => {
   };
 
   const handleLike = async () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
     try {
       const response = await api.post(`/api/tools/${id}/like`);
       setIsLiked(response.data.liked);
@@ -60,10 +56,6 @@ const ToolDetail = () => {
   };
 
   const handleFavorite = async () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
     try {
       const response = await api.post(`/api/tools/${id}/favorite`);
       setIsFavorited(response.data.favorited);
@@ -74,10 +66,6 @@ const ToolDetail = () => {
 
   const handleSubmitComment = async (e) => {
     e.preventDefault();
-    if (!user) {
-      navigate('/login');
-      return;
-    }
     if (!commentContent.trim()) return;
 
     try {
@@ -160,25 +148,23 @@ const ToolDetail = () => {
         <div className="comments-section">
           <h3 className="comments-title">💬 讨论区 ({tool.commentsCount})</h3>
 
-          {user && (
-            <form onSubmit={handleSubmitComment} className="comment-form">
-              <textarea
-                className="form-textarea"
-                placeholder="分享你对这个工具的看法..."
-                value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
-                rows={3}
-              />
-              <button
-                type="submit"
-                className="btn btn-primary"
-                style={{ marginTop: '12px' }}
-                disabled={!commentContent.trim()}
-              >
-                发表评论
-              </button>
-            </form>
-          )}
+          <form onSubmit={handleSubmitComment} className="comment-form">
+            <textarea
+              className="form-textarea"
+              placeholder="分享你对这个工具的看法..."
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              rows={3}
+            />
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ marginTop: '12px' }}
+              disabled={!commentContent.trim()}
+            >
+              发表评论
+            </button>
+          </form>
 
           <div className="comment-list">
             {comments.length > 0 ? (

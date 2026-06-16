@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { io } from 'socket.io-client';
 
 const Chat = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -13,20 +11,15 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-
     // 连接Socket.io
     const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
     setSocket(newSocket);
 
     // 加入聊天室
     newSocket.emit('join_chat', {
-      id: user.id,
-      username: user.username,
-      avatar: user.avatar
+      id: user?.id || 'guest',
+      username: user?.username || '游客',
+      avatar: user?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=guest'
     });
 
     // 监听消息
@@ -39,12 +32,8 @@ const Chat = () => {
       setOnlineUsers(users);
     });
 
-    // 获取历史消息
-    fetch('/api/chat/history', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    // 获取历史消息（无需认证）
+    fetch('/api/chat/history')
       .then(res => res.json())
       .then(data => setMessages(data))
       .catch(err => console.error('获取历史消息失败:', err));
@@ -52,7 +41,7 @@ const Chat = () => {
     return () => {
       newSocket.close();
     };
-  }, [user, navigate]);
+  }, []);
 
   // 自动滚动到底部
   useEffect(() => {
@@ -66,16 +55,14 @@ const Chat = () => {
     socket.emit('send_message', {
       text: inputMessage,
       user: {
-        id: user.id,
-        username: user.username,
-        avatar: user.avatar
+        id: user?.id || 'guest',
+        username: user?.username || '游客',
+        avatar: user?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=guest'
       }
     });
 
     setInputMessage('');
   };
-
-  if (!user) return null;
 
   return (
     <div className="chat-container">
