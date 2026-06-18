@@ -8,7 +8,6 @@ import Register from './pages/Register';
 import ToolDetail from './pages/ToolDetail';
 import ShareTool from './pages/ShareTool';
 import Profile from './pages/Profile';
-import Chat from './pages/Chat';
 import Favorites from './pages/Favorites';
 import Featured from './pages/Featured';
 import HighFrequency from './pages/HighFrequency';
@@ -29,7 +28,6 @@ function App() {
               <Route path="/tool/:id" element={<ToolDetail />} />
               <Route path="/share" element={<ShareTool />} />
               <Route path="/profile/:id" element={<Profile />} />
-              <Route path="/chat" element={<Chat />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/featured" element={<Featured />} />
             </Routes>

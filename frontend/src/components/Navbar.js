@@ -32,7 +32,6 @@ const Navbar = () => {
           <Link to="/" className="nav-link">首页</Link>
           <Link to="/featured" className="nav-link" style={{ color: '#9b59b6', fontWeight: 600 }}>⭐ 最佳推荐</Link>
           <Link to="/share" className="nav-link">分享工具</Link>
-          <Link to="/chat" className="nav-link">聊天室</Link>
           <Link to="/favorites" className="nav-link">我的收藏</Link>
 
           {user && !user.isGuest ? (
